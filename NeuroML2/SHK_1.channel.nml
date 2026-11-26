@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd"
+    id="SHK_1">
+
+    <include href="variables_and_units.xml"/>
+
+    <ionChannel id="SHK_1" conductance="10pS" type="ionChannelHH" species="k">
+
+        <notes>SHK-1 Channel designed from model code (Du et al. 2025)</notes>
+
+        <gateHHtauInf type="customNGate" id="n" instances="4"/>
+
+    </ionChannel>
+
+    <ComponentType name="customNGate"
+                   extends="gateHHtauInf"
+                   description="Custom gate for n">
+
+        <Exposure name="tau" dimension="time"/>
+
+        <Constant name="mV" dimension="voltage" value="1mV"/>
+        <Constant name="ms" dimension="time" value="1ms"/>
+        <Constant dimension="none" name="phi" value="1.2"/>
+        <Constant dimension="voltage" name="Vth" value="10mV"/>
+
+        <Requirement name="v" dimension="voltage"/>
+
+        <Dynamics>
+
+            <StateVariable name="q" dimension="none"/>
+
+            <DerivedVariable name="rateScale" exposure="rateScale" dimension="none" value="1"/>
+
+            <DerivedVariable name="V" dimension="none" value="v / mV"/>
+            <DerivedVariable name="VTH_mV" dimension="none" value="Vth / mV"/>
+
+            <DerivedVariable name="inf" dimension="none" exposure="inf" value="0.5 * (tanh((V - VTH_mV + 15.2) / 36.22) + 1)"/>
+
+            <DerivedVariable name="tau" dimension="time" exposure="tau" value="(1.18 + 511.78 / (1 + exp((V - VTH_mV + 89.3) / 21.92))) * ms"/>
+
+            <OnStart>
+                <StateAssignment variable="q" value="inf"/>
+            </OnStart>
+
+            <TimeDerivative value="phi * ((inf - q) / tau)" variable="q"/>
+            <DerivedVariable dimension="none" exposure="fcond" name="fcond" value="q^instances"/>
+
+        </Dynamics>
+    </ComponentType>
+
+</neuroml>

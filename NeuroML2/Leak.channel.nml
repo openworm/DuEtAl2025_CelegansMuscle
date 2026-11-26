@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2 https://raw.githubusercontent.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2.3.xsd"
+         id="Leak_channel">
+    
+    <ionChannelHH id="Leak" species="non_specific" conductance="10 pS">
+        
+        <notes>Ungated nonspecific leak current: I_Leak = g_Leak*(V-E_Leak). No gating variables. Maximal conductance density belongs in the cell's channelDensity.</notes>
+    
+    </ionChannelHH>
+
+</neuroml>

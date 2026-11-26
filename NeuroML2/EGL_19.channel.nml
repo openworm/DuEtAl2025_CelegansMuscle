@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd"
+    id="k_fast">
+
+    <include href="variables_and_units.xml"/>
+
+    <ionChannel id="EGL_19" conductance="10pS" type="ionChannelHH" species="ca">
+
+        <notes>EGL-19 Channel designed from model code (Du et al. 2025)</notes>
+
+        <gateHHtauInf type="customMGate" id="m" instances="2"/>
+
+        <gateHHtauInf type="customHGate" id="H" instances="1"/>
+
+    </ionChannel>
+
+    <ComponentType name="customMGate"
+                   extends="gateHHtauInf"
+                   description="Custom gate for m">
+
+        <Exposure name="tau" dimension="time"/>
+
+        <Constant name="mV" dimension="voltage" value="1mV"/>
+        <Constant name="ms" dimension="time" value="1ms"/>
+        <Constant dimension="none" name="phi" value="1.2"/>
+        <Constant dimension="voltage" name="Vth" value="10mV"/>
+
+        <Requirement name="v" dimension="voltage"/>
+
+        <Dynamics>
+
+            <StateVariable name="q" dimension="none"/>
+
+            <DerivedVariable name="rateScale" exposure="rateScale" dimension="none" value="1"/>
+
+            <DerivedVariable name="V" dimension="none" value="v / mV"/>
+            <DerivedVariable name="VTH_mV" dimension="none" value="Vth / mV"/>
+
+            <DerivedVariable name="inf" dimension="none" exposure="inf" value="1 / (1 + (exp( -1*(V + 8 - VTH_mV) / 8.6)))"/>
+
+            <DerivedVariable name="tau" dimension="time" exposure="tau" value="(0.4 + (0.7 / (exp(-(V + 5 - VTH_mV) / 15) + exp((V + 5 - VTH_mV) / 15)))) * ms"/>
+
+            <OnStart>
+                <StateAssignment variable="q" value="inf"/>
+            </OnStart>
+
+            <TimeDerivative value="phi * ((inf - q) / tau)" variable="q"/>
+            <DerivedVariable dimension="none" exposure="fcond" name="fcond" value="q^instances"/>
+
+        </Dynamics>
+    </ComponentType>
+
+    <ComponentType name="customHGate"
+                   extends="gateHHtauInf"
+                   description="Custom gate for h">
+
+        <Constant name="mV" dimension="voltage" value="1mV"/>
+        <Constant name="ms" dimension="time" value="1ms"/>
+        <Constant dimension="voltage" name="Vth" value="10mV"/>
+
+        <Exposure name="tau" dimension="time"/>
+
+        <Requirement name="v" dimension="voltage"/>
+
+        <Dynamics>
+
+            <StateVariable name="q" dimension="none"/>
+
+            <DerivedVariable name="rateScale" exposure="rateScale" dimension="none" value="1"/>
+
+            <DerivedVariable name="V" dimension="none" value="v / mV"/>
+            <DerivedVariable name="VTH_mV" dimension="none" value="Vth / mV"/>
+
+            <DerivedVariable name="inf" dimension="none" exposure="inf" value="(0.42 / (1 + (exp((V + 11 - VTH_mV) / 2)))) + 0.28"/>
+
+            <DerivedVariable name="tau" dimension="time" exposure="tau" value="24 * ms"/>
+
+            <OnStart>
+                <StateAssignment variable="q" value="inf"/>
+            </OnStart>
+
+            <TimeDerivative value="(inf - q) / tau" variable="q"/>
+            <DerivedVariable dimension="none" exposure="fcond" name="fcond" value="q^instances"/>
+
+        </Dynamics>
+    </ComponentType>
+
+</neuroml>
