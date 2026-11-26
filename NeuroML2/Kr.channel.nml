@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd"
+    id="Kr">
+
+    <include href="variables_and_units.xml"/>
+
+    <ionChannel id="Kr" conductance="10pS" type="ionChannelHH" species="k">
+
+        <notes>Kr Channel designed from model code (Du et al. 2025)</notes>
+
+        <gateHHtauInf type="customQGate" id="q" instances="1"/>
+
+    </ionChannel>
+
+    <ComponentType name="customQGate"
+                   extends="gateHHtauInf"
+                   description="Custom gate for q">
+
+        <Constant name="mV" dimension="voltage" value="1mV"/>
+        <Constant name="ms" dimension="time" value="1ms"/>
+        <Constant dimension="voltage" name="Vth" value="10mV"/>
+
+        <Exposure name="tau" dimension="time"/>
+
+        <Requirement name="v" dimension="voltage"/>
+
+        <Dynamics>
+
+            <StateVariable name="q" dimension="none"/>
+
+            <DerivedVariable name="rateScale" exposure="rateScale" dimension="none" value="1"/>
+
+            <DerivedVariable name="V" dimension="none" value="v / mV"/>
+            <DerivedVariable name="VTH_mV" dimension="none" value="Vth / mV"/>
+
+            <DerivedVariable name="inf" dimension="none" exposure="inf" value="0.5 * (1 + tanh((V - VTH_mV + 42) / 5.0))"/>
+
+            <DerivedVariable name="tau" dimension="time" exposure="tau" value="62 * ms"/>
+
+            <OnStart>
+                <StateAssignment variable="q" value="inf"/>
+            </OnStart>
+
+            <TimeDerivative value="(inf - q) / tau" variable="q"/>
+
+            <DerivedVariable name="fcond" exposure="fcond" dimension="none" value="(1 - q) * inf"/>
+
+        </Dynamics>
+    </ComponentType>
+
+</neuroml>

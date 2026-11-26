@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd"
+         id="SLO_2">
+
+    <include href="variables_and_units.xml"/>
+
+    <ionChannel id="SLO_2" conductance="10pS" type="ionChannelHH" species="k">
+
+        <notes>SLO_2 Channel designed from model code (Du et al. 2025)</notes>
+
+        <gateHHtauInf id="z" instances="3">
+
+            <steadyState type="HHSigmoidVariable" rate="1" scale="3.2 mV" midpoint="-33.4 mV"/>
+
+            <timeCourse type="fixedTimeCourse" tau="0.05ms"/>
+
+        </gateHHtauInf>
+
+        <gateHHtauInf type="customPGate" id="p" instances="1" alpha="43 per_ms_per_mM2" beta="0.09 per_ms"/>
+
+    </ionChannel>
+
+    <ComponentType name="customPGate"
+                   extends="gateHHtauInf"
+                   description="Custom gate for p">
+
+        <Parameter name="alpha" dimension="per_time_per_conc2"/>
+        <Parameter name="beta" dimension="per_time"/>
+
+        <Constant dimension="time" name="ms" value="1ms"/>
+        <Constant dimension="none" name="phi" value="0.04"/>
+
+        <Exposure name="tau" dimension="time"/>
+        <Exposure name="inf" dimension="none"/>
+
+        <Requirement name="caConc" dimension="concentration"/>
+
+        <Dynamics>
+
+            <StateVariable name="q" dimension="none"/>
+
+            <DerivedVariable name="rateScale" exposure="rateScale" dimension="none" value="1"/>
+
+            <DerivedVariable name="inf" dimension="none" exposure="inf" value="(alpha * caConc * caConc) / ((alpha * caConc * caConc) + beta)"/>
+
+            <DerivedVariable name="tau" dimension="time" exposure="tau" value="1 / ((alpha * caConc * caConc) + beta)"/>
+
+            <OnStart>
+                <StateAssignment variable="q" value="inf"/>
+            </OnStart>
+
+            <TimeDerivative value="phi * ((inf - q) / tau)" variable="q"/>
+            <DerivedVariable dimension="none" exposure="fcond" name="fcond" value="q^instances"/>
+
+        </Dynamics>
+    </ComponentType>
+
+</neuroml>

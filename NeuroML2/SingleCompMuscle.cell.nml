@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<neuroml xmlns="http://www.neuroml.org/schema/neuroml2"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://www.neuroml.org/schema/neuroml2  https://raw.github.com/NeuroML/NeuroML2/master/Schemas/NeuroML2/NeuroML_v2beta.xsd"
+    id="SingleCompMuscle">
+
+    <include href="EGL_19.channel.nml"/>
+    <include href="Kr.channel.nml"/>
+    <include href="SHK_1.channel.nml"/>
+    <include href="Leak.channel.nml"/>
+    <include href="SLO_2.channel.nml"/>
+    <include href="Na.channel.nml"/>
+    <include href="CaPool.nml"/>
+
+    <cell id="SingleCompMuscleCell">
+
+        <notes>Single-compartment C. elegans body wall muscle cell with reversal potentials from model code</notes>
+
+        <morphology id="morph_SingleCompMuscleCell">
+            <segment id="0" name="soma">
+                <proximal x="0.0" y="0.0" z="0.0" diameter="30.901936"/>
+                <distal x="0.0" y="0.0" z="0.0" diameter="30.901936"/>
+            </segment>
+            <segmentGroup id="soma_group" neuroLexId="sao864921383">
+                <member segment="0"/>
+            </segmentGroup>
+            <segmentGroup id="all">
+                <member segment="0"/>
+            </segmentGroup>
+        </morphology>
+
+        <biophysicalProperties id="biophys_SingleCompMuscleCell">
+
+            <membraneProperties>
+
+                
+                <channelDensity id="EGL_19_all" ionChannel="EGL_19" condDensity="0.66 mS_per_cm2" erev="70.0 mV" ion="ca" segmentGroup="all"/>
+
+                
+                <channelDensity id="SHK_1_all" ionChannel="SHK_1" condDensity="1.233333 mS_per_cm2" erev="-30.0 mV" ion="k" segmentGroup="all"/>
+                <channelDensity id="SLO_2_all" ionChannel="SLO_2" condDensity="0.12 mS_per_cm2" erev="-40.0 mV" ion="k" segmentGroup="all"/>
+                <channelDensity id="Kr_all" ionChannel="Kr" condDensity="0.106667 mS_per_cm2" erev="-40.0 mV" ion="k" segmentGroup="all"/>
+
+        
+                <channelDensity id="Na_all" ionChannel="Na" condDensity="0.003333 mS_per_cm2" erev="25.0 mV" ion="na" segmentGroup="all"/>
+
+            
+                <channelDensity id="Leak_all" ionChannel="Leak" condDensity="0.003333 mS_per_cm2" erev="-14.0 mV" ion="non_specific" segmentGroup="all"/>
+
+            
+                <specificCapacitance value="0.733333 uF_per_cm2" segmentGroup="all"/>
+
+                <initMembPotential value="-30.0 mV" segmentGroup="all"/>
+
+                <spikeThresh value="0 mV"/>
+
+            </membraneProperties>
+
+            <intracellularProperties>
+                <species id="ca" ion="ca" concentrationModel="CaPool" initialConcentration="0.0 mM" initialExtConcentration="2.0 mM" segmentGroup="all"/>
+                <resistivity value="0.1 kohm_cm" segmentGroup="all"/>
+            </intracellularProperties>
+
+        </biophysicalProperties>
+
+    </cell>
+
+</neuroml>

@@ -1,0 +1,7 @@
+<Lems>
+    <Dimension name="per_time_per_conc2" l="6" t="-1" n="-2"/>
+    <Unit symbol="per_ms_per_mM2" dimension="per_time_per_conc2" power="3"/>
+    <Constant name="mV" dimension="voltage" value="0.001"/>
+    <Constant name="ms" dimension="time" value="0.001"/>
+    <Constant name="Vth" dimension="voltage" value="0.01"/>
+</Lems>

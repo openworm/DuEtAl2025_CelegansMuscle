@@ -1,0 +1,26 @@
+<Lems>
+
+    <Target component="sim_CurrentClamp"/>
+
+    <Include file="NeuroML2CoreTypes.xml"/>
+    <Include file="Simulation.xml"/>
+    <Include file="CurrentClamp.net.nml"/>
+
+    <Simulation id="sim_CurrentClamp" length="1000ms" step="0.05ms" target="CurrentClampNet" seed="123">
+
+        <Display id="disp_voltage" title="Muscle Cell Membrane Potential (mV)" timeScale="1s" xmin="0" xmax="0.5" ymin="-40" ymax="40">
+            <Line id="V_muscle" quantity="muscle_pop/0/SingleCompMuscleCell/v" scale="1mV" color="#ff0000" timeScale="1s"/>
+        </Display>
+
+        <Display id="disp_current" title="Injected Current (pA)" timeScale="1s" xmin="0" xmax="0.5" ymin="0" ymax="35">
+        </Display>
+
+        <OutputFile id="out_voltage" fileName="muscle_voltage.dat">
+            <OutputColumn id="t" quantity="t"/>
+            <OutputColumn id="v" quantity="muscle_pop/0/SingleCompMuscleCell/v"/>
+        </OutputFile>
+
+    </Simulation>
+
+</Lems>
+
